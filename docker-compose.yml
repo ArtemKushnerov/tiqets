@@ -1,0 +1,43 @@
+version: '3.7'
+services:
+  tiqets:
+    build:
+      context: .
+      target: prod
+    volumes:
+    - .:/app
+    command: bash -c "./create_db.sh && poetry run python -m tiqets.main"
+    environment:
+    - DB_HOST=db
+    - DB_NAME=tiqets
+    depends_on:
+      db:
+        condition: service_healthy
+
+  tiqets-test:
+    build:
+      context: .
+      target: dev
+    volumes:
+    - .:/app
+    command: bash -c "./create_db.sh && poetry run pytest --log-cli-level=INFO"
+    environment:
+    - DB_HOST=db
+    - DB_NAME=test_tiqets
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:5.7
+    environment:
+    - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: ["CMD-SHELL", 'mysqladmin ping']
+      interval: 10s
+      timeout: 2s
+      retries: 10
