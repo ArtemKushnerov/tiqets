@@ -1,5 +1,5 @@
-**To run tests
+# To run tests
 ./test.hs
 
-**To run assigned
+# To run assigned
 ./run.sh
