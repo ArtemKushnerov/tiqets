@@ -32,7 +32,7 @@ def load_barcodes(csv_path, session):
             order_id = None if row["order_id"] == "" else int(row["order_id"])
             barcode_value = None if row["barcode"] == "" else int(row["barcode"])
             if not barcode_value:
-                logger.warning(f"")
+                logger.warning(f"Empty barcode value, order_id={order_id}")
                 continue
 
             barcode = Barcode(value=barcode_value, order_id=order_id)
