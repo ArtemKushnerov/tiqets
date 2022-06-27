@@ -1,1 +1,1 @@
-docker compose run tiqets
+docker compose run --rm tiqets

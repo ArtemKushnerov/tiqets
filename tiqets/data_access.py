@@ -1,7 +1,8 @@
 import logging
 
-from sqlalchemy import func, text
+from sqlalchemy import func
 
+from tiqets.decorators import cache
 from tiqets.models import Barcode, Customer, Order
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,16 @@ def get_output_dataset(session):
 
 
 def get_top_customers(session):
+    rows = _get_top_customers(session)
+    logger.info(f"Top {CUSTOMERS_IN_THE_TOP} customers:")
+    for row in rows:
+        logger.info(row)
+    return rows
+
+
+# NOTE the query seem like a good fit for simple caching with TTL, since there's likely no need to refresh in real time
+@cache(key="top_customers", ttl=60)
+def _get_top_customers(session):
     """
     Generates the following SQL:
 
@@ -63,9 +74,6 @@ def get_top_customers(session):
         .limit(CUSTOMERS_IN_THE_TOP)
     )
     rows = query.all()
-    logger.info(f"Top {CUSTOMERS_IN_THE_TOP} customers:")
-    for row in rows:
-        logger.info(row)
     return rows
 
 

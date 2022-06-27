@@ -47,7 +47,6 @@ class Order(Base):
         return self.id == other.id
 
 
-
 class Barcode(Base):
     __tablename__ = "barcodes"
 

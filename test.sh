@@ -1,1 +1,1 @@
-docker compose run tiqets-test
+docker compose run --rm tiqets-test

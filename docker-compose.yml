@@ -10,9 +10,13 @@ services:
     environment:
     - DB_HOST=db
     - DB_NAME=tiqets
+    - REDIS_HOST=redis
+    - USE_CACHE=True
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
 
   tiqets-test:
     build:
@@ -24,9 +28,12 @@ services:
     environment:
     - DB_HOST=db
     - DB_NAME=test_tiqets
+    - REDIS_HOST=redis
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
 
   db:
     image: mysql:5.7
@@ -41,3 +48,8 @@ services:
       interval: 10s
       timeout: 2s
       retries: 10
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379

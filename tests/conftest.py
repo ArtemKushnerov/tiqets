@@ -1,10 +1,10 @@
-
 import factory
 import pytest
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
 from tiqets.models import Barcode, Customer, Order, engine
+
 
 @pytest.fixture(scope="session", autouse=True)
 def session():
